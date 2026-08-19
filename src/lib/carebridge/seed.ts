@@ -42,14 +42,14 @@ export function buildPatients(): Patient[] {
   const rand = rng(42);
   return names.map((name, i) => {
     const risk = Math.round(20 + rand() * 75);
-    const condition = conditions[i % conditions.length];
+    const condition = conditions[i % conditions.length]!;
     const barriers = barrierPool.filter(() => rand() > 0.72).slice(0, 2);
     const appointment = Math.round(55 + rand() * 45);
     const medication = Math.round(45 + rand() * 55);
     const tests = Math.round(40 + rand() * 60);
     const engagement = Math.round(45 + rand() * 55);
     const careScore = Math.round((appointment + medication + tests + engagement) / 4);
-    const id = name.toLowerCase().split(" ")[0];
+    const id = name.toLowerCase().split(" ")[0]!;
     return {
       id,
       name,
@@ -57,7 +57,7 @@ export function buildPatients(): Patient[] {
       phone: `98${(10000000 + Math.floor(rand() * 89999999)).toString()}`,
       condition,
       diagnosedOn: "10 Aug 2026",
-      coordinator: coordinators[i % coordinators.length],
+      coordinator: coordinators[i % coordinators.length]!,
       risk,
       riskFactors: factorsFor(risk, barriers),
       careScore,
@@ -89,15 +89,14 @@ export function buildPatients(): Patient[] {
         {
           id: `${id}-msg1`,
           from: "ai",
-          text: `${name.split(" ")[0]}, your follow-up is due soon. Would you like a teleconsultation instead of travelling?`,
+          text: `${name.split(" ")[0]!}, your follow-up is due soon. Would you like a teleconsultation instead of travelling?`,
           at: "2 days ago",
         },
       ],
       interventions: [],
-      caregiver:
-        i % 3 === 0
-          ? { name: "Ananya", relation: "Daughter", phone: "9876543210", consent: true }
-          : undefined,
+      ...(i % 3 === 0
+        ? { caregiver: { name: "Ananya", relation: "Daughter", phone: "9876543210", consent: true } }
+        : {}),
     } satisfies Patient;
   });
 }
