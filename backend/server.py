@@ -168,3 +168,101 @@ async def care_insight(req: CareInsightReq):
         f"Pending care tasks today: {req.pendingTasks}. Barriers reported: {barriers}."
     )
     return {"text": await run_llm(system, prompt)}
+
+
+class CostAlertReq(BaseModel):
+    name: str
+    condition: str
+    physicalVisit: int
+    teleconsult: int
+    teleSavings: int
+    insuranceCoveragePct: int
+    testName: Optional[str] = None
+    testCost: Optional[int] = None
+    outOfPocket: int
+
+
+class EscalationReq(BaseModel):
+    name: str
+    caregiverName: str
+    relation: str
+    trigger: str
+    condition: str
+
+
+class DischargeReq(BaseModel):
+    text: str
+    patientName: Optional[str] = None
+
+
+@app.post("/api/ai/cost-alert")
+async def cost_alert(req: CostAlertReq):
+    system = (
+        "You are CareBridge AI, a patient affordability assistant. Speak directly to the patient ('you'). "
+        "Give 2-3 short, plain, encouraging cost-saving alerts as separate lines, each starting with '• '. "
+        "Use the exact rupee figures provided. Mention teleconsultation savings and insurance coverage. "
+        "Never give medical advice. Keep it under 70 words total."
+    )
+    lines = [
+        f"Physical visit ~ ₹{req.physicalVisit}; teleconsultation ~ ₹{req.teleconsult} (save ₹{req.teleSavings}).",
+        f"Insurance covers {req.insuranceCoveragePct}% of eligible costs; estimated out-of-pocket ₹{req.outOfPocket}.",
+    ]
+    if req.testCost and req.testName:
+        lines.append(f"Upcoming test {req.testName} costs ~ ₹{req.testCost}.")
+    prompt = f"Patient {req.name} ({req.condition}). Cost data: " + " ".join(lines)
+    return {"text": await run_llm(system, prompt)}
+
+
+@app.post("/api/ai/escalation-message")
+async def escalation_message(req: EscalationReq):
+    system = (
+        "You are CareBridge AI. Write a short, warm, respectful message to a patient's family caregiver, "
+        "asking them to gently encourage the patient with their care. Address the caregiver by first name, "
+        "state the concern kindly, and suggest one supportive action. Protect privacy — no clinical details "
+        "beyond the trigger. Under 55 words."
+    )
+    prompt = (
+        f"Caregiver: {req.caregiverName} ({req.relation}). Patient first name: {req.name}. "
+        f"Condition (general): {req.condition}. Trigger: {req.trigger}."
+    )
+    return {"text": await run_llm(system, prompt)}
+
+
+def _extract_json(text: str) -> dict:
+    import json as _json
+
+    t = text.strip()
+    if t.startswith("```"):
+        t = t.split("```", 2)[1]
+        if t.startswith("json"):
+            t = t[4:]
+    start, end = t.find("{"), t.rfind("}")
+    if start != -1 and end != -1:
+        t = t[start : end + 1]
+    try:
+        return _json.loads(t)
+    except Exception:
+        return {}
+
+
+@app.post("/api/ai/discharge-analysis")
+async def discharge_analysis(req: DischargeReq):
+    system = (
+        "You are CareBridge AI, a discharge-summary parser. Read the hospital discharge summary and extract "
+        "a structured care plan. Respond with STRICT JSON only (no prose, no code fences) matching exactly:\n"
+        "{\n"
+        '  "diagnosis": "string",\n'
+        '  "medications": [{"name":"string","dose":"string","time":"string","perDay":number,"quantity":number}],\n'
+        '  "appointments": [{"date":"string","doctor":"string"}],\n'
+        '  "tests": [{"name":"string","due":"string"}],\n'
+        '  "recoveryInstructions": ["string"],\n'
+        '  "riskFactors": ["string"]\n'
+        "}\n"
+        "Infer sensible quantity/perDay and near-future dates if not explicit. Keep lists concise."
+    )
+    prompt = f"Patient: {req.patientName or 'Unknown'}.\n\nDISCHARGE SUMMARY:\n{req.text}"
+    raw = await run_llm(system, prompt)
+    data = _extract_json(raw)
+    if not data:
+        raise HTTPException(status_code=502, detail="Could not parse discharge summary into a care plan.")
+    return data

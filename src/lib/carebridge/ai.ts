@@ -57,3 +57,50 @@ export async function aiCareInsight(p: Patient): Promise<string> {
   });
   return text;
 }
+
+export async function aiCostAlert(p: Patient, cost: {
+  physicalVisit: number;
+  teleconsult: number;
+  teleSavings: number;
+  outOfPocket: number;
+}): Promise<string> {
+  const firstName = p.name.split(" ")[0] ?? p.name;
+  const nextTest = p.tests.find((t) => t.status !== "completed");
+  const { text } = await post<{ text: string }>("/api/ai/cost-alert", {
+    name: firstName,
+    condition: p.condition,
+    physicalVisit: cost.physicalVisit,
+    teleconsult: cost.teleconsult,
+    teleSavings: cost.teleSavings,
+    insuranceCoveragePct: p.costs.insuranceCoveragePct,
+    testName: nextTest?.name,
+    testCost: nextTest?.cost,
+    outOfPocket: cost.outOfPocket,
+  });
+  return text;
+}
+
+export async function aiEscalationMessage(p: Patient, trigger: string): Promise<string> {
+  const firstName = p.name.split(" ")[0] ?? p.name;
+  const { text } = await post<{ text: string }>("/api/ai/escalation-message", {
+    name: firstName,
+    caregiverName: p.caregiver?.name ?? "there",
+    relation: p.caregiver?.relation ?? "family member",
+    trigger,
+    condition: p.condition,
+  });
+  return text;
+}
+
+export interface DischargePlan {
+  diagnosis: string;
+  medications: { name: string; dose: string; time: string; perDay: number; quantity: number }[];
+  appointments: { date: string; doctor: string }[];
+  tests: { name: string; due: string }[];
+  recoveryInstructions: string[];
+  riskFactors: string[];
+}
+
+export async function aiDischargeAnalysis(text: string, patientName?: string): Promise<DischargePlan> {
+  return post<DischargePlan>("/api/ai/discharge-analysis", { text, patientName });
+}

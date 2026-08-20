@@ -17,6 +17,7 @@ import { Route as PatientIndexRouteImport } from './routes/patient/index'
 import { Route as PatientDashRouteImport } from './routes/patient/_dash'
 import { Route as PatientLoginRouteImport } from './routes/patient/login'
 import { Route as HospitalDashAnalyticsRouteImport } from './routes/hospital/_dash/analytics'
+import { Route as HospitalDashFinancialRouteImport } from './routes/hospital/_dash/financial'
 import { Route as HospitalDashFollowUpsRouteImport } from './routes/hospital/_dash/follow-ups'
 import { Route as HospitalDashHighRiskRouteImport } from './routes/hospital/_dash/high-risk'
 import { Route as HospitalDashInterventionsRouteImport } from './routes/hospital/_dash/interventions'
@@ -27,11 +28,13 @@ import { Route as HospitalDashRevenueRouteImport } from './routes/hospital/_dash
 import { Route as HospitalDashSettingsRouteImport } from './routes/hospital/_dash/settings'
 import { Route as PatientDashAppointmentsRouteImport } from './routes/patient/_dash/appointments'
 import { Route as PatientDashCareScoreRouteImport } from './routes/patient/_dash/care-score'
+import { Route as PatientDashCostRouteImport } from './routes/patient/_dash/cost'
 import { Route as PatientDashFamilyRouteImport } from './routes/patient/_dash/family'
 import { Route as PatientDashHomeRouteImport } from './routes/patient/_dash/home'
 import { Route as PatientDashMedicinesRouteImport } from './routes/patient/_dash/medicines'
 import { Route as PatientDashMessagesRouteImport } from './routes/patient/_dash/messages'
 import { Route as PatientDashProfileRouteImport } from './routes/patient/_dash/profile'
+import { Route as PatientDashRecoveryRouteImport } from './routes/patient/_dash/recovery'
 import { Route as PatientDashTestsRouteImport } from './routes/patient/_dash/tests'
 import { Route as HospitalDashPatientIdRouteImport } from './routes/hospital/_dash/patient.$id'
 
@@ -73,6 +76,11 @@ const PatientLoginRoute = PatientLoginRouteImport.update({
 const HospitalDashAnalyticsRoute = HospitalDashAnalyticsRouteImport.update({
   id: '/analytics',
   path: '/analytics',
+  getParentRoute: () => HospitalDashRoute,
+} as any)
+const HospitalDashFinancialRoute = HospitalDashFinancialRouteImport.update({
+  id: '/financial',
+  path: '/financial',
   getParentRoute: () => HospitalDashRoute,
 } as any)
 const HospitalDashFollowUpsRoute = HospitalDashFollowUpsRouteImport.update({
@@ -126,6 +134,11 @@ const PatientDashCareScoreRoute = PatientDashCareScoreRouteImport.update({
   path: '/care-score',
   getParentRoute: () => PatientDashRoute,
 } as any)
+const PatientDashCostRoute = PatientDashCostRouteImport.update({
+  id: '/cost',
+  path: '/cost',
+  getParentRoute: () => PatientDashRoute,
+} as any)
 const PatientDashFamilyRoute = PatientDashFamilyRouteImport.update({
   id: '/family',
   path: '/family',
@@ -151,6 +164,11 @@ const PatientDashProfileRoute = PatientDashProfileRouteImport.update({
   path: '/profile',
   getParentRoute: () => PatientDashRoute,
 } as any)
+const PatientDashRecoveryRoute = PatientDashRecoveryRouteImport.update({
+  id: '/recovery',
+  path: '/recovery',
+  getParentRoute: () => PatientDashRoute,
+} as any)
 const PatientDashTestsRoute = PatientDashTestsRouteImport.update({
   id: '/tests',
   path: '/tests',
@@ -171,6 +189,7 @@ export interface FileRoutesByFullPath {
   '/hospital/': typeof HospitalIndexRoute
   '/patient/': typeof PatientIndexRoute
   '/hospital/analytics': typeof HospitalDashAnalyticsRoute
+  '/hospital/financial': typeof HospitalDashFinancialRoute
   '/hospital/follow-ups': typeof HospitalDashFollowUpsRoute
   '/hospital/high-risk': typeof HospitalDashHighRiskRoute
   '/hospital/interventions': typeof HospitalDashInterventionsRoute
@@ -181,11 +200,13 @@ export interface FileRoutesByFullPath {
   '/hospital/settings': typeof HospitalDashSettingsRoute
   '/patient/appointments': typeof PatientDashAppointmentsRoute
   '/patient/care-score': typeof PatientDashCareScoreRoute
+  '/patient/cost': typeof PatientDashCostRoute
   '/patient/family': typeof PatientDashFamilyRoute
   '/patient/home': typeof PatientDashHomeRoute
   '/patient/medicines': typeof PatientDashMedicinesRoute
   '/patient/messages': typeof PatientDashMessagesRoute
   '/patient/profile': typeof PatientDashProfileRoute
+  '/patient/recovery': typeof PatientDashRecoveryRoute
   '/patient/tests': typeof PatientDashTestsRoute
   '/hospital/patient/$id': typeof HospitalDashPatientIdRoute
 }
@@ -196,6 +217,7 @@ export interface FileRoutesByTo {
   '/patient': typeof PatientIndexRoute
   '/patient/login': typeof PatientLoginRoute
   '/hospital/analytics': typeof HospitalDashAnalyticsRoute
+  '/hospital/financial': typeof HospitalDashFinancialRoute
   '/hospital/follow-ups': typeof HospitalDashFollowUpsRoute
   '/hospital/high-risk': typeof HospitalDashHighRiskRoute
   '/hospital/interventions': typeof HospitalDashInterventionsRoute
@@ -206,11 +228,13 @@ export interface FileRoutesByTo {
   '/hospital/settings': typeof HospitalDashSettingsRoute
   '/patient/appointments': typeof PatientDashAppointmentsRoute
   '/patient/care-score': typeof PatientDashCareScoreRoute
+  '/patient/cost': typeof PatientDashCostRoute
   '/patient/family': typeof PatientDashFamilyRoute
   '/patient/home': typeof PatientDashHomeRoute
   '/patient/medicines': typeof PatientDashMedicinesRoute
   '/patient/messages': typeof PatientDashMessagesRoute
   '/patient/profile': typeof PatientDashProfileRoute
+  '/patient/recovery': typeof PatientDashRecoveryRoute
   '/patient/tests': typeof PatientDashTestsRoute
   '/hospital/patient/$id': typeof HospitalDashPatientIdRoute
 }
@@ -224,6 +248,7 @@ export interface FileRoutesById {
   '/hospital/': typeof HospitalIndexRoute
   '/patient/': typeof PatientIndexRoute
   '/hospital/_dash/analytics': typeof HospitalDashAnalyticsRoute
+  '/hospital/_dash/financial': typeof HospitalDashFinancialRoute
   '/hospital/_dash/follow-ups': typeof HospitalDashFollowUpsRoute
   '/hospital/_dash/high-risk': typeof HospitalDashHighRiskRoute
   '/hospital/_dash/interventions': typeof HospitalDashInterventionsRoute
@@ -234,11 +259,13 @@ export interface FileRoutesById {
   '/hospital/_dash/settings': typeof HospitalDashSettingsRoute
   '/patient/_dash/appointments': typeof PatientDashAppointmentsRoute
   '/patient/_dash/care-score': typeof PatientDashCareScoreRoute
+  '/patient/_dash/cost': typeof PatientDashCostRoute
   '/patient/_dash/family': typeof PatientDashFamilyRoute
   '/patient/_dash/home': typeof PatientDashHomeRoute
   '/patient/_dash/medicines': typeof PatientDashMedicinesRoute
   '/patient/_dash/messages': typeof PatientDashMessagesRoute
   '/patient/_dash/profile': typeof PatientDashProfileRoute
+  '/patient/_dash/recovery': typeof PatientDashRecoveryRoute
   '/patient/_dash/tests': typeof PatientDashTestsRoute
   '/hospital/_dash/patient/$id': typeof HospitalDashPatientIdRoute
 }
@@ -253,6 +280,7 @@ export interface FileRouteTypes {
     | '/hospital/'
     | '/patient/'
     | '/hospital/analytics'
+    | '/hospital/financial'
     | '/hospital/follow-ups'
     | '/hospital/high-risk'
     | '/hospital/interventions'
@@ -263,11 +291,13 @@ export interface FileRouteTypes {
     | '/hospital/settings'
     | '/patient/appointments'
     | '/patient/care-score'
+    | '/patient/cost'
     | '/patient/family'
     | '/patient/home'
     | '/patient/medicines'
     | '/patient/messages'
     | '/patient/profile'
+    | '/patient/recovery'
     | '/patient/tests'
     | '/hospital/patient/$id'
   fileRoutesByTo: FileRoutesByTo
@@ -278,6 +308,7 @@ export interface FileRouteTypes {
     | '/patient'
     | '/patient/login'
     | '/hospital/analytics'
+    | '/hospital/financial'
     | '/hospital/follow-ups'
     | '/hospital/high-risk'
     | '/hospital/interventions'
@@ -288,11 +319,13 @@ export interface FileRouteTypes {
     | '/hospital/settings'
     | '/patient/appointments'
     | '/patient/care-score'
+    | '/patient/cost'
     | '/patient/family'
     | '/patient/home'
     | '/patient/medicines'
     | '/patient/messages'
     | '/patient/profile'
+    | '/patient/recovery'
     | '/patient/tests'
     | '/hospital/patient/$id'
   id:
@@ -305,6 +338,7 @@ export interface FileRouteTypes {
     | '/hospital/'
     | '/patient/'
     | '/hospital/_dash/analytics'
+    | '/hospital/_dash/financial'
     | '/hospital/_dash/follow-ups'
     | '/hospital/_dash/high-risk'
     | '/hospital/_dash/interventions'
@@ -315,11 +349,13 @@ export interface FileRouteTypes {
     | '/hospital/_dash/settings'
     | '/patient/_dash/appointments'
     | '/patient/_dash/care-score'
+    | '/patient/_dash/cost'
     | '/patient/_dash/family'
     | '/patient/_dash/home'
     | '/patient/_dash/medicines'
     | '/patient/_dash/messages'
     | '/patient/_dash/profile'
+    | '/patient/_dash/recovery'
     | '/patient/_dash/tests'
     | '/hospital/_dash/patient/$id'
   fileRoutesById: FileRoutesById
@@ -392,6 +428,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof HospitalDashAnalyticsRouteImport
       parentRoute: typeof HospitalDashRoute
     }
+    '/hospital/_dash/financial': {
+      id: '/hospital/_dash/financial'
+      path: '/financial'
+      fullPath: '/hospital/financial'
+      preLoaderRoute: typeof HospitalDashFinancialRouteImport
+      parentRoute: typeof HospitalDashRoute
+    }
     '/hospital/_dash/follow-ups': {
       id: '/hospital/_dash/follow-ups'
       path: '/follow-ups'
@@ -462,6 +505,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PatientDashCareScoreRouteImport
       parentRoute: typeof PatientDashRoute
     }
+    '/patient/_dash/cost': {
+      id: '/patient/_dash/cost'
+      path: '/cost'
+      fullPath: '/patient/cost'
+      preLoaderRoute: typeof PatientDashCostRouteImport
+      parentRoute: typeof PatientDashRoute
+    }
     '/patient/_dash/family': {
       id: '/patient/_dash/family'
       path: '/family'
@@ -497,6 +547,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PatientDashProfileRouteImport
       parentRoute: typeof PatientDashRoute
     }
+    '/patient/_dash/recovery': {
+      id: '/patient/_dash/recovery'
+      path: '/recovery'
+      fullPath: '/patient/recovery'
+      preLoaderRoute: typeof PatientDashRecoveryRouteImport
+      parentRoute: typeof PatientDashRoute
+    }
     '/patient/_dash/tests': {
       id: '/patient/_dash/tests'
       path: '/tests'
@@ -516,6 +573,7 @@ declare module '@tanstack/react-router' {
 
 interface HospitalDashRouteChildren {
   HospitalDashAnalyticsRoute: typeof HospitalDashAnalyticsRoute
+  HospitalDashFinancialRoute: typeof HospitalDashFinancialRoute
   HospitalDashFollowUpsRoute: typeof HospitalDashFollowUpsRoute
   HospitalDashHighRiskRoute: typeof HospitalDashHighRiskRoute
   HospitalDashInterventionsRoute: typeof HospitalDashInterventionsRoute
@@ -529,6 +587,7 @@ interface HospitalDashRouteChildren {
 
 const HospitalDashRouteChildren: HospitalDashRouteChildren = {
   HospitalDashAnalyticsRoute: HospitalDashAnalyticsRoute,
+  HospitalDashFinancialRoute: HospitalDashFinancialRoute,
   HospitalDashFollowUpsRoute: HospitalDashFollowUpsRoute,
   HospitalDashHighRiskRoute: HospitalDashHighRiskRoute,
   HospitalDashInterventionsRoute: HospitalDashInterventionsRoute,
@@ -547,22 +606,26 @@ const HospitalDashRouteWithChildren = HospitalDashRoute._addFileChildren(
 interface PatientDashRouteChildren {
   PatientDashAppointmentsRoute: typeof PatientDashAppointmentsRoute
   PatientDashCareScoreRoute: typeof PatientDashCareScoreRoute
+  PatientDashCostRoute: typeof PatientDashCostRoute
   PatientDashFamilyRoute: typeof PatientDashFamilyRoute
   PatientDashHomeRoute: typeof PatientDashHomeRoute
   PatientDashMedicinesRoute: typeof PatientDashMedicinesRoute
   PatientDashMessagesRoute: typeof PatientDashMessagesRoute
   PatientDashProfileRoute: typeof PatientDashProfileRoute
+  PatientDashRecoveryRoute: typeof PatientDashRecoveryRoute
   PatientDashTestsRoute: typeof PatientDashTestsRoute
 }
 
 const PatientDashRouteChildren: PatientDashRouteChildren = {
   PatientDashAppointmentsRoute: PatientDashAppointmentsRoute,
   PatientDashCareScoreRoute: PatientDashCareScoreRoute,
+  PatientDashCostRoute: PatientDashCostRoute,
   PatientDashFamilyRoute: PatientDashFamilyRoute,
   PatientDashHomeRoute: PatientDashHomeRoute,
   PatientDashMedicinesRoute: PatientDashMedicinesRoute,
   PatientDashMessagesRoute: PatientDashMessagesRoute,
   PatientDashProfileRoute: PatientDashProfileRoute,
+  PatientDashRecoveryRoute: PatientDashRecoveryRoute,
   PatientDashTestsRoute: PatientDashTestsRoute,
 }
 

@@ -8,8 +8,10 @@ import {
   LogOut,
   MessageCircle,
   Pill,
+  Route as RouteIcon,
   User,
   Users,
+  Wallet,
 } from "lucide-react";
 import { Blobs } from "@/components/cb/glass";
 import { usePatient, useStore } from "@/lib/carebridge/store";
@@ -23,6 +25,8 @@ const NAV = [
   { to: "/patient/medicines", label: "Medicines", icon: Pill },
   { to: "/patient/appointments", label: "Appointments", icon: CalendarCheck },
   { to: "/patient/tests", label: "Tests", icon: FlaskConical },
+  { to: "/patient/cost", label: "Cost Insights", icon: Wallet },
+  { to: "/patient/recovery", label: "Recovery", icon: RouteIcon },
   { to: "/patient/care-score", label: "Care Score", icon: Gauge },
   { to: "/patient/messages", label: "Messages", icon: MessageCircle },
   { to: "/patient/family", label: "Family", icon: Users },

@@ -12,6 +12,11 @@ export interface Medicine {
   time: string;
   taken: boolean;
   takenAt?: string;
+  quantity: number; // tablets/capsules remaining
+  perDay: number; // consumed per day
+  refillsLeft: number; // prescribed refills remaining
+  refillRequested?: boolean;
+  adherenceTrend: number[]; // % adherence over recent weeks
 }
 
 export interface CareTask {
@@ -25,6 +30,8 @@ export interface LabTest {
   name: string;
   due: string;
   status: "pending" | "booked" | "completed";
+  cost: number;
+  insuredPct: number;
 }
 
 export interface Appointment {
@@ -60,6 +67,65 @@ export interface Diagnosis {
   appointmentId?: string;
 }
 
+export interface CostEstimate {
+  consultationFee: number;
+  teleconsultFee: number;
+  travelCost: number;
+  lostWagesCost: number;
+  medicineRefillCost: number;
+  testCost: number;
+  insuranceCoveragePct: number;
+}
+
+export interface EmergencyContact {
+  id: string;
+  name: string;
+  relation: string;
+  phone: string;
+}
+
+export interface Caregiver {
+  name: string;
+  relation: string;
+  phone: string;
+  consent: boolean;
+  email?: string;
+}
+
+export interface Escalation {
+  id: string;
+  trigger: string;
+  message: string;
+  at: string;
+  status: "pending" | "acknowledged" | "resolved";
+  caregiver?: string;
+}
+
+export interface CarePlanMilestone {
+  id: string;
+  label: string;
+  category: "medication" | "appointment" | "test" | "recovery";
+  done: boolean;
+  due: string;
+}
+
+export interface DischargeSummary {
+  uploaded: boolean;
+  uploadedOn?: string;
+  rawText?: string;
+  diagnosis?: string;
+  recoveryInstructions?: string[];
+  riskFactors?: string[];
+}
+
+export interface CarePlan {
+  active: boolean;
+  startedOn?: string;
+  progress: number;
+  milestones: CarePlanMilestone[];
+  discharge?: DischargeSummary;
+}
+
 export interface Patient {
   id: string;
   name: string;
@@ -68,7 +134,12 @@ export interface Patient {
   condition: string;
   diagnosedOn: string;
   coordinator: string;
-  risk: number;
+  location: string;
+  distanceKm: number;
+  risk: number; // drop-off risk 0-100
+  financialRisk: number;
+  medicationRisk: number;
+  recoveryRisk: number;
   riskFactors: RiskFactor[];
   careScore: number;
   scoreTrend: number[];
@@ -77,6 +148,7 @@ export interface Patient {
   lastActiveDays: number;
   revenueAtRisk: number;
   nextAction: "Call" | "WhatsApp" | "Staff Alert" | "Monitor";
+  costs: CostEstimate;
   medicines: Medicine[];
   tasks: CareTask[];
   tests: LabTest[];
@@ -84,7 +156,10 @@ export interface Patient {
   messages: MessageItem[];
   interventions: InterventionLog[];
   diagnoses?: Diagnosis[];
-  caregiver?: { name: string; relation: string; phone: string; consent: boolean };
+  caregiver?: Caregiver;
+  emergencyContacts?: EmergencyContact[];
+  escalations?: Escalation[];
+  carePlan?: CarePlan;
 }
 
 export type HospitalRole = "Admin" | "Doctor" | "Care Coordinator" | "Nurse";
@@ -102,14 +177,28 @@ export const ROLE_ACCESS: Record<HospitalRole, string[]> = {
     "high-risk",
     "follow-ups",
     "medications",
+    "refills",
+    "financial",
+    "onboarding",
+    "escalations",
     "interventions",
     "analytics",
     "revenue",
     "settings",
   ],
-  Doctor: ["overview", "patients", "high-risk", "follow-ups", "analytics"],
-  "Care Coordinator": ["overview", "patients", "high-risk", "follow-ups", "interventions", "analytics"],
-  Nurse: ["overview", "patients", "medications", "follow-ups"],
+  Doctor: ["overview", "patients", "high-risk", "follow-ups", "onboarding", "refills", "analytics"],
+  "Care Coordinator": [
+    "overview",
+    "patients",
+    "high-risk",
+    "follow-ups",
+    "financial",
+    "escalations",
+    "onboarding",
+    "interventions",
+    "analytics",
+  ],
+  Nurse: ["overview", "patients", "medications", "refills", "follow-ups", "escalations"],
 };
 
 export function riskBand(risk: number): RiskBand {

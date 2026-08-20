@@ -5,13 +5,17 @@ import {
   BarChart3,
   Bell,
   CalendarCheck,
+  ClipboardList,
+  HeartHandshake,
   IndianRupee,
   LayoutDashboard,
   LogOut,
+  PackageOpen,
   Pill,
   Settings,
   ShieldAlert,
   Users,
+  Wallet,
 } from "lucide-react";
 import { Blobs } from "@/components/cb/glass";
 import { useStore } from "@/lib/carebridge/store";
@@ -27,6 +31,10 @@ const NAV = [
   { key: "high-risk", to: "/hospital/high-risk", label: "High-Risk", icon: ShieldAlert },
   { key: "follow-ups", to: "/hospital/follow-ups", label: "Follow-Ups", icon: CalendarCheck },
   { key: "medications", to: "/hospital/medications", label: "Medication", icon: Pill },
+  { key: "refills", to: "/hospital/refills", label: "Refill Monitor", icon: PackageOpen },
+  { key: "financial", to: "/hospital/financial", label: "Financial Risk", icon: Wallet },
+  { key: "onboarding", to: "/hospital/onboarding", label: "Onboarding", icon: ClipboardList },
+  { key: "escalations", to: "/hospital/escalations", label: "Escalations", icon: HeartHandshake },
   { key: "interventions", to: "/hospital/interventions", label: "Interventions", icon: Activity },
   { key: "analytics", to: "/hospital/analytics", label: "Analytics", icon: BarChart3 },
   { key: "revenue", to: "/hospital/revenue", label: "Revenue Recovery", icon: IndianRupee },
