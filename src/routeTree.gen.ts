@@ -13,6 +13,10 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as HospitalIndexRouteImport } from './routes/hospital/index'
 import { Route as HospitalDashRouteImport } from './routes/hospital/_dash'
 import { Route as HospitalLoginRouteImport } from './routes/hospital/login'
+import { Route as HospitalDashHighRiskRouteImport } from './routes/hospital/_dash/high-risk'
+import { Route as HospitalDashOverviewRouteImport } from './routes/hospital/_dash/overview'
+import { Route as HospitalDashPatientsRouteImport } from './routes/hospital/_dash/patients'
+import { Route as HospitalDashPatientIdRouteImport } from './routes/hospital/_dash/patient.$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -34,36 +38,92 @@ const HospitalLoginRoute = HospitalLoginRouteImport.update({
   path: '/hospital/login',
   getParentRoute: () => rootRouteImport,
 } as any)
+const HospitalDashHighRiskRoute = HospitalDashHighRiskRouteImport.update({
+  id: '/high-risk',
+  path: '/high-risk',
+  getParentRoute: () => HospitalDashRoute,
+} as any)
+const HospitalDashOverviewRoute = HospitalDashOverviewRouteImport.update({
+  id: '/overview',
+  path: '/overview',
+  getParentRoute: () => HospitalDashRoute,
+} as any)
+const HospitalDashPatientsRoute = HospitalDashPatientsRouteImport.update({
+  id: '/patients',
+  path: '/patients',
+  getParentRoute: () => HospitalDashRoute,
+} as any)
+const HospitalDashPatientIdRoute = HospitalDashPatientIdRouteImport.update({
+  id: '/patient/$id',
+  path: '/patient/$id',
+  getParentRoute: () => HospitalDashRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/hospital': typeof HospitalDashRoute
+  '/hospital': typeof HospitalDashRouteWithChildren
   '/hospital/login': typeof HospitalLoginRoute
   '/hospital/': typeof HospitalIndexRoute
+  '/hospital/high-risk': typeof HospitalDashHighRiskRoute
+  '/hospital/overview': typeof HospitalDashOverviewRoute
+  '/hospital/patients': typeof HospitalDashPatientsRoute
+  '/hospital/patient/$id': typeof HospitalDashPatientIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/hospital': typeof HospitalIndexRoute
   '/hospital/login': typeof HospitalLoginRoute
+  '/hospital/high-risk': typeof HospitalDashHighRiskRoute
+  '/hospital/overview': typeof HospitalDashOverviewRoute
+  '/hospital/patients': typeof HospitalDashPatientsRoute
+  '/hospital/patient/$id': typeof HospitalDashPatientIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/hospital/_dash': typeof HospitalDashRoute
+  '/hospital/_dash': typeof HospitalDashRouteWithChildren
   '/hospital/login': typeof HospitalLoginRoute
   '/hospital/': typeof HospitalIndexRoute
+  '/hospital/_dash/high-risk': typeof HospitalDashHighRiskRoute
+  '/hospital/_dash/overview': typeof HospitalDashOverviewRoute
+  '/hospital/_dash/patients': typeof HospitalDashPatientsRoute
+  '/hospital/_dash/patient/$id': typeof HospitalDashPatientIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/hospital' | '/hospital/login' | '/hospital/'
+  fullPaths:
+    | '/'
+    | '/hospital'
+    | '/hospital/login'
+    | '/hospital/'
+    | '/hospital/high-risk'
+    | '/hospital/overview'
+    | '/hospital/patients'
+    | '/hospital/patient/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/hospital' | '/hospital/login'
-  id: '__root__' | '/' | '/hospital/_dash' | '/hospital/login' | '/hospital/'
+  to:
+    | '/'
+    | '/hospital'
+    | '/hospital/login'
+    | '/hospital/high-risk'
+    | '/hospital/overview'
+    | '/hospital/patients'
+    | '/hospital/patient/$id'
+  id:
+    | '__root__'
+    | '/'
+    | '/hospital/_dash'
+    | '/hospital/login'
+    | '/hospital/'
+    | '/hospital/_dash/high-risk'
+    | '/hospital/_dash/overview'
+    | '/hospital/_dash/patients'
+    | '/hospital/_dash/patient/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  HospitalDashRoute: typeof HospitalDashRoute
+  HospitalDashRoute: typeof HospitalDashRouteWithChildren
   HospitalLoginRoute: typeof HospitalLoginRoute
   HospitalIndexRoute: typeof HospitalIndexRoute
 }
@@ -98,12 +158,58 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof HospitalLoginRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/hospital/_dash/high-risk': {
+      id: '/hospital/_dash/high-risk'
+      path: '/high-risk'
+      fullPath: '/hospital/high-risk'
+      preLoaderRoute: typeof HospitalDashHighRiskRouteImport
+      parentRoute: typeof HospitalDashRoute
+    }
+    '/hospital/_dash/overview': {
+      id: '/hospital/_dash/overview'
+      path: '/overview'
+      fullPath: '/hospital/overview'
+      preLoaderRoute: typeof HospitalDashOverviewRouteImport
+      parentRoute: typeof HospitalDashRoute
+    }
+    '/hospital/_dash/patients': {
+      id: '/hospital/_dash/patients'
+      path: '/patients'
+      fullPath: '/hospital/patients'
+      preLoaderRoute: typeof HospitalDashPatientsRouteImport
+      parentRoute: typeof HospitalDashRoute
+    }
+    '/hospital/_dash/patient/$id': {
+      id: '/hospital/_dash/patient/$id'
+      path: '/patient/$id'
+      fullPath: '/hospital/patient/$id'
+      preLoaderRoute: typeof HospitalDashPatientIdRouteImport
+      parentRoute: typeof HospitalDashRoute
+    }
   }
 }
 
+interface HospitalDashRouteChildren {
+  HospitalDashHighRiskRoute: typeof HospitalDashHighRiskRoute
+  HospitalDashOverviewRoute: typeof HospitalDashOverviewRoute
+  HospitalDashPatientsRoute: typeof HospitalDashPatientsRoute
+  HospitalDashPatientIdRoute: typeof HospitalDashPatientIdRoute
+}
+
+const HospitalDashRouteChildren: HospitalDashRouteChildren = {
+  HospitalDashHighRiskRoute: HospitalDashHighRiskRoute,
+  HospitalDashOverviewRoute: HospitalDashOverviewRoute,
+  HospitalDashPatientsRoute: HospitalDashPatientsRoute,
+  HospitalDashPatientIdRoute: HospitalDashPatientIdRoute,
+}
+
+const HospitalDashRouteWithChildren = HospitalDashRoute._addFileChildren(
+  HospitalDashRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  HospitalDashRoute: HospitalDashRoute,
+  HospitalDashRoute: HospitalDashRouteWithChildren,
   HospitalLoginRoute: HospitalLoginRoute,
   HospitalIndexRoute: HospitalIndexRoute,
 }
