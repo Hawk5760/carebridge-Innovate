@@ -51,6 +51,15 @@ export interface InterventionLog {
   resolved: boolean;
 }
 
+export interface Diagnosis {
+  id: string;
+  date: string;
+  doctor: string;
+  summary: string;
+  notes?: string;
+  appointmentId?: string;
+}
+
 export interface Patient {
   id: string;
   name: string;
@@ -74,6 +83,7 @@ export interface Patient {
   appointments: Appointment[];
   messages: MessageItem[];
   interventions: InterventionLog[];
+  diagnoses?: Diagnosis[];
   caregiver?: { name: string; relation: string; phone: string; consent: boolean };
 }
 

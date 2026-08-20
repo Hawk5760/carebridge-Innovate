@@ -1,4 +1,8 @@
+import asyncio
+import json
 import os
+import urllib.error
+import urllib.request
 import uuid
 from pathlib import Path
 from typing import List, Optional
@@ -16,6 +20,31 @@ load_dotenv(ROOT / ".env")
 EMERGENT_LLM_KEY = os.environ.get("EMERGENT_LLM_KEY")
 MODEL_PROVIDER = "openai"
 MODEL_NAME = "gpt-5.4"
+
+GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
+GEMINI_MODEL = os.environ.get("GEMINI_MODEL", "gemini-2.0-flash")
+
+
+def _call_gemini_sync(system: str, prompt: str) -> str:
+    url = (
+        f"https://generativelanguage.googleapis.com/v1beta/models/"
+        f"{GEMINI_MODEL}:generateContent?key={GEMINI_API_KEY}"
+    )
+    body = json.dumps(
+        {
+            "systemInstruction": {"parts": [{"text": system}]},
+            "contents": [{"role": "user", "parts": [{"text": prompt}]}],
+            "generationConfig": {"temperature": 0.7, "maxOutputTokens": 512},
+        }
+    ).encode()
+    req = urllib.request.Request(url, data=body, headers={"Content-Type": "application/json"})
+    with urllib.request.urlopen(req, timeout=30) as resp:
+        data = json.loads(resp.read().decode())
+    return data["candidates"][0]["content"]["parts"][0]["text"].strip()
+
+
+async def run_gemini(system: str, prompt: str) -> str:
+    return await asyncio.to_thread(_call_gemini_sync, system, prompt)
 
 app = FastAPI(title="CareBridge AI")
 
@@ -61,8 +90,16 @@ class CareInsightReq(BaseModel):
 
 
 async def run_llm(system: str, prompt: str) -> str:
+    # Prefer the user's Gemini key; fall back to the Emergent universal key so AI
+    # keeps working even if the Gemini key is invalid/revoked/over quota.
+    if GEMINI_API_KEY:
+        try:
+            return await run_gemini(system, prompt)
+        except Exception as e:  # noqa: BLE001 - log and fall back
+            print(f"[ai] Gemini failed ({e}); falling back to Emergent key")
+
     if not EMERGENT_LLM_KEY:
-        raise HTTPException(status_code=500, detail="LLM key not configured")
+        raise HTTPException(status_code=500, detail="No LLM key configured")
     chat = LlmChat(
         api_key=EMERGENT_LLM_KEY,
         session_id=str(uuid.uuid4()),
@@ -71,7 +108,7 @@ async def run_llm(system: str, prompt: str) -> str:
     try:
         reply = await chat.send_message(UserMessage(text=prompt))
         return reply.strip() if isinstance(reply, str) else str(reply)
-    except Exception as e:  # surface a clean error to the client
+    except Exception as e:
         raise HTTPException(status_code=502, detail=f"AI service error: {e}")
 
 

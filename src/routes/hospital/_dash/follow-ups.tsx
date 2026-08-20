@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { toast } from "sonner";
 import { GlassCard, SectionTitle } from "@/components/cb/glass";
 import { recompute, useStore } from "@/lib/carebridge/store";
@@ -59,6 +59,14 @@ function FollowUps() {
                     <button onClick={() => setStatus(p.id, a.id, "rescheduled")} className="glass-soft rounded-full px-3 py-1.5 text-xs">Reschedule</button>
                     <button onClick={() => setStatus(p.id, a.id, "missed")} className="glass-soft rounded-full px-3 py-1.5 text-xs">Mark missed</button>
                     <button onClick={() => setStatus(p.id, a.id, "completed")} className="rounded-full bg-primary px-3 py-1.5 text-xs font-semibold text-primary-foreground">Completed</button>
+                    <Link
+                      to="/hospital/patient/$id"
+                      params={{ id: p.id }}
+                      data-testid={`followup-diagnose-${p.id}`}
+                      className="rounded-full bg-primary/15 px-3 py-1.5 text-xs font-semibold text-primary hover:bg-primary/25"
+                    >
+                      Diagnose →
+                    </Link>
                   </div>
                 </td>
               </tr>

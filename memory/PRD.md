@@ -26,8 +26,20 @@ teal/glass aesthetic (polished), and add real AI.
   race fix in store (`hydrated` flag) so refreshing a dashboard URL no longer bounces to login.
 - Verified end-to-end via Playwright on the public preview URL (patient + hospital flows + AI).
 
+## Updates (2026-06, session 2)
+- AI provider: now Gemini-first (user key GEMINI_API_KEY, model gemini-2.0-flash via REST) with
+  automatic fallback to the Emergent universal key so AI never breaks. NOTE: the user's supplied
+  Gemini key is REVOKED by Google ("reported as leaked") so it currently 404/403s and falls back.
+  Needs a fresh, non-public Gemini key to actually use Gemini.
+- Doctor diagnosis on follow-up: added `Diagnosis` type + `Patient.diagnoses`. On the hospital
+  patient detail page, a "Follow-up visit & diagnosis" card lets the doctor enter a diagnosis
+  summary/notes (and optionally update the primary condition) when the patient comes in — this
+  records to diagnosis history and marks the pending follow-up appointment completed. Added a
+  "Diagnose →" action to each row in the Follow-Ups queue.
+
 ## Backlog / next
-- P1: Hospital "Draft outreach message" -> one-click log into intervention history.
+
+## Backlog / next
 - P1: Persist patient-selectable identity at login (choose which patient to sign in as).
 - P2: Streaming AI responses (currently one-shot); AI on interventions/analytics pages.
 - P2: Real reminder/automation timeline simulation on the patient/hospital side.
