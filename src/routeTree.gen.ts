@@ -13,6 +13,16 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as HospitalIndexRouteImport } from './routes/hospital/index'
 import { Route as HospitalDashRouteImport } from './routes/hospital/_dash'
 import { Route as HospitalLoginRouteImport } from './routes/hospital/login'
+import { Route as HospitalDashAnalyticsRouteImport } from './routes/hospital/_dash/analytics'
+import { Route as HospitalDashFollowUpsRouteImport } from './routes/hospital/_dash/follow-ups'
+import { Route as HospitalDashHighRiskRouteImport } from './routes/hospital/_dash/high-risk'
+import { Route as HospitalDashInterventionsRouteImport } from './routes/hospital/_dash/interventions'
+import { Route as HospitalDashMedicationsRouteImport } from './routes/hospital/_dash/medications'
+import { Route as HospitalDashOverviewRouteImport } from './routes/hospital/_dash/overview'
+import { Route as HospitalDashPatientsRouteImport } from './routes/hospital/_dash/patients'
+import { Route as HospitalDashRevenueRouteImport } from './routes/hospital/_dash/revenue'
+import { Route as HospitalDashSettingsRouteImport } from './routes/hospital/_dash/settings'
+import { Route as HospitalDashPatientIdRouteImport } from './routes/hospital/_dash/patient.$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -34,36 +44,159 @@ const HospitalLoginRoute = HospitalLoginRouteImport.update({
   path: '/hospital/login',
   getParentRoute: () => rootRouteImport,
 } as any)
+const HospitalDashAnalyticsRoute = HospitalDashAnalyticsRouteImport.update({
+  id: '/analytics',
+  path: '/analytics',
+  getParentRoute: () => HospitalDashRoute,
+} as any)
+const HospitalDashFollowUpsRoute = HospitalDashFollowUpsRouteImport.update({
+  id: '/follow-ups',
+  path: '/follow-ups',
+  getParentRoute: () => HospitalDashRoute,
+} as any)
+const HospitalDashHighRiskRoute = HospitalDashHighRiskRouteImport.update({
+  id: '/high-risk',
+  path: '/high-risk',
+  getParentRoute: () => HospitalDashRoute,
+} as any)
+const HospitalDashInterventionsRoute =
+  HospitalDashInterventionsRouteImport.update({
+    id: '/interventions',
+    path: '/interventions',
+    getParentRoute: () => HospitalDashRoute,
+  } as any)
+const HospitalDashMedicationsRoute = HospitalDashMedicationsRouteImport.update({
+  id: '/medications',
+  path: '/medications',
+  getParentRoute: () => HospitalDashRoute,
+} as any)
+const HospitalDashOverviewRoute = HospitalDashOverviewRouteImport.update({
+  id: '/overview',
+  path: '/overview',
+  getParentRoute: () => HospitalDashRoute,
+} as any)
+const HospitalDashPatientsRoute = HospitalDashPatientsRouteImport.update({
+  id: '/patients',
+  path: '/patients',
+  getParentRoute: () => HospitalDashRoute,
+} as any)
+const HospitalDashRevenueRoute = HospitalDashRevenueRouteImport.update({
+  id: '/revenue',
+  path: '/revenue',
+  getParentRoute: () => HospitalDashRoute,
+} as any)
+const HospitalDashSettingsRoute = HospitalDashSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => HospitalDashRoute,
+} as any)
+const HospitalDashPatientIdRoute = HospitalDashPatientIdRouteImport.update({
+  id: '/patient/$id',
+  path: '/patient/$id',
+  getParentRoute: () => HospitalDashRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/hospital': typeof HospitalDashRoute
+  '/hospital': typeof HospitalDashRouteWithChildren
   '/hospital/login': typeof HospitalLoginRoute
   '/hospital/': typeof HospitalIndexRoute
+  '/hospital/analytics': typeof HospitalDashAnalyticsRoute
+  '/hospital/follow-ups': typeof HospitalDashFollowUpsRoute
+  '/hospital/high-risk': typeof HospitalDashHighRiskRoute
+  '/hospital/interventions': typeof HospitalDashInterventionsRoute
+  '/hospital/medications': typeof HospitalDashMedicationsRoute
+  '/hospital/overview': typeof HospitalDashOverviewRoute
+  '/hospital/patients': typeof HospitalDashPatientsRoute
+  '/hospital/revenue': typeof HospitalDashRevenueRoute
+  '/hospital/settings': typeof HospitalDashSettingsRoute
+  '/hospital/patient/$id': typeof HospitalDashPatientIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/hospital': typeof HospitalIndexRoute
   '/hospital/login': typeof HospitalLoginRoute
+  '/hospital/analytics': typeof HospitalDashAnalyticsRoute
+  '/hospital/follow-ups': typeof HospitalDashFollowUpsRoute
+  '/hospital/high-risk': typeof HospitalDashHighRiskRoute
+  '/hospital/interventions': typeof HospitalDashInterventionsRoute
+  '/hospital/medications': typeof HospitalDashMedicationsRoute
+  '/hospital/overview': typeof HospitalDashOverviewRoute
+  '/hospital/patients': typeof HospitalDashPatientsRoute
+  '/hospital/revenue': typeof HospitalDashRevenueRoute
+  '/hospital/settings': typeof HospitalDashSettingsRoute
+  '/hospital/patient/$id': typeof HospitalDashPatientIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/hospital/_dash': typeof HospitalDashRoute
+  '/hospital/_dash': typeof HospitalDashRouteWithChildren
   '/hospital/login': typeof HospitalLoginRoute
   '/hospital/': typeof HospitalIndexRoute
+  '/hospital/_dash/analytics': typeof HospitalDashAnalyticsRoute
+  '/hospital/_dash/follow-ups': typeof HospitalDashFollowUpsRoute
+  '/hospital/_dash/high-risk': typeof HospitalDashHighRiskRoute
+  '/hospital/_dash/interventions': typeof HospitalDashInterventionsRoute
+  '/hospital/_dash/medications': typeof HospitalDashMedicationsRoute
+  '/hospital/_dash/overview': typeof HospitalDashOverviewRoute
+  '/hospital/_dash/patients': typeof HospitalDashPatientsRoute
+  '/hospital/_dash/revenue': typeof HospitalDashRevenueRoute
+  '/hospital/_dash/settings': typeof HospitalDashSettingsRoute
+  '/hospital/_dash/patient/$id': typeof HospitalDashPatientIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/hospital' | '/hospital/login' | '/hospital/'
+  fullPaths:
+    | '/'
+    | '/hospital'
+    | '/hospital/login'
+    | '/hospital/'
+    | '/hospital/analytics'
+    | '/hospital/follow-ups'
+    | '/hospital/high-risk'
+    | '/hospital/interventions'
+    | '/hospital/medications'
+    | '/hospital/overview'
+    | '/hospital/patients'
+    | '/hospital/revenue'
+    | '/hospital/settings'
+    | '/hospital/patient/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/hospital' | '/hospital/login'
-  id: '__root__' | '/' | '/hospital/_dash' | '/hospital/login' | '/hospital/'
+  to:
+    | '/'
+    | '/hospital'
+    | '/hospital/login'
+    | '/hospital/analytics'
+    | '/hospital/follow-ups'
+    | '/hospital/high-risk'
+    | '/hospital/interventions'
+    | '/hospital/medications'
+    | '/hospital/overview'
+    | '/hospital/patients'
+    | '/hospital/revenue'
+    | '/hospital/settings'
+    | '/hospital/patient/$id'
+  id:
+    | '__root__'
+    | '/'
+    | '/hospital/_dash'
+    | '/hospital/login'
+    | '/hospital/'
+    | '/hospital/_dash/analytics'
+    | '/hospital/_dash/follow-ups'
+    | '/hospital/_dash/high-risk'
+    | '/hospital/_dash/interventions'
+    | '/hospital/_dash/medications'
+    | '/hospital/_dash/overview'
+    | '/hospital/_dash/patients'
+    | '/hospital/_dash/revenue'
+    | '/hospital/_dash/settings'
+    | '/hospital/_dash/patient/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  HospitalDashRoute: typeof HospitalDashRoute
+  HospitalDashRoute: typeof HospitalDashRouteWithChildren
   HospitalLoginRoute: typeof HospitalLoginRoute
   HospitalIndexRoute: typeof HospitalIndexRoute
 }
@@ -98,12 +231,112 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof HospitalLoginRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/hospital/_dash/analytics': {
+      id: '/hospital/_dash/analytics'
+      path: '/analytics'
+      fullPath: '/hospital/analytics'
+      preLoaderRoute: typeof HospitalDashAnalyticsRouteImport
+      parentRoute: typeof HospitalDashRoute
+    }
+    '/hospital/_dash/follow-ups': {
+      id: '/hospital/_dash/follow-ups'
+      path: '/follow-ups'
+      fullPath: '/hospital/follow-ups'
+      preLoaderRoute: typeof HospitalDashFollowUpsRouteImport
+      parentRoute: typeof HospitalDashRoute
+    }
+    '/hospital/_dash/high-risk': {
+      id: '/hospital/_dash/high-risk'
+      path: '/high-risk'
+      fullPath: '/hospital/high-risk'
+      preLoaderRoute: typeof HospitalDashHighRiskRouteImport
+      parentRoute: typeof HospitalDashRoute
+    }
+    '/hospital/_dash/interventions': {
+      id: '/hospital/_dash/interventions'
+      path: '/interventions'
+      fullPath: '/hospital/interventions'
+      preLoaderRoute: typeof HospitalDashInterventionsRouteImport
+      parentRoute: typeof HospitalDashRoute
+    }
+    '/hospital/_dash/medications': {
+      id: '/hospital/_dash/medications'
+      path: '/medications'
+      fullPath: '/hospital/medications'
+      preLoaderRoute: typeof HospitalDashMedicationsRouteImport
+      parentRoute: typeof HospitalDashRoute
+    }
+    '/hospital/_dash/overview': {
+      id: '/hospital/_dash/overview'
+      path: '/overview'
+      fullPath: '/hospital/overview'
+      preLoaderRoute: typeof HospitalDashOverviewRouteImport
+      parentRoute: typeof HospitalDashRoute
+    }
+    '/hospital/_dash/patients': {
+      id: '/hospital/_dash/patients'
+      path: '/patients'
+      fullPath: '/hospital/patients'
+      preLoaderRoute: typeof HospitalDashPatientsRouteImport
+      parentRoute: typeof HospitalDashRoute
+    }
+    '/hospital/_dash/revenue': {
+      id: '/hospital/_dash/revenue'
+      path: '/revenue'
+      fullPath: '/hospital/revenue'
+      preLoaderRoute: typeof HospitalDashRevenueRouteImport
+      parentRoute: typeof HospitalDashRoute
+    }
+    '/hospital/_dash/settings': {
+      id: '/hospital/_dash/settings'
+      path: '/settings'
+      fullPath: '/hospital/settings'
+      preLoaderRoute: typeof HospitalDashSettingsRouteImport
+      parentRoute: typeof HospitalDashRoute
+    }
+    '/hospital/_dash/patient/$id': {
+      id: '/hospital/_dash/patient/$id'
+      path: '/patient/$id'
+      fullPath: '/hospital/patient/$id'
+      preLoaderRoute: typeof HospitalDashPatientIdRouteImport
+      parentRoute: typeof HospitalDashRoute
+    }
   }
 }
 
+interface HospitalDashRouteChildren {
+  HospitalDashAnalyticsRoute: typeof HospitalDashAnalyticsRoute
+  HospitalDashFollowUpsRoute: typeof HospitalDashFollowUpsRoute
+  HospitalDashHighRiskRoute: typeof HospitalDashHighRiskRoute
+  HospitalDashInterventionsRoute: typeof HospitalDashInterventionsRoute
+  HospitalDashMedicationsRoute: typeof HospitalDashMedicationsRoute
+  HospitalDashOverviewRoute: typeof HospitalDashOverviewRoute
+  HospitalDashPatientsRoute: typeof HospitalDashPatientsRoute
+  HospitalDashRevenueRoute: typeof HospitalDashRevenueRoute
+  HospitalDashSettingsRoute: typeof HospitalDashSettingsRoute
+  HospitalDashPatientIdRoute: typeof HospitalDashPatientIdRoute
+}
+
+const HospitalDashRouteChildren: HospitalDashRouteChildren = {
+  HospitalDashAnalyticsRoute: HospitalDashAnalyticsRoute,
+  HospitalDashFollowUpsRoute: HospitalDashFollowUpsRoute,
+  HospitalDashHighRiskRoute: HospitalDashHighRiskRoute,
+  HospitalDashInterventionsRoute: HospitalDashInterventionsRoute,
+  HospitalDashMedicationsRoute: HospitalDashMedicationsRoute,
+  HospitalDashOverviewRoute: HospitalDashOverviewRoute,
+  HospitalDashPatientsRoute: HospitalDashPatientsRoute,
+  HospitalDashRevenueRoute: HospitalDashRevenueRoute,
+  HospitalDashSettingsRoute: HospitalDashSettingsRoute,
+  HospitalDashPatientIdRoute: HospitalDashPatientIdRoute,
+}
+
+const HospitalDashRouteWithChildren = HospitalDashRoute._addFileChildren(
+  HospitalDashRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  HospitalDashRoute: HospitalDashRoute,
+  HospitalDashRoute: HospitalDashRouteWithChildren,
   HospitalLoginRoute: HospitalLoginRoute,
   HospitalIndexRoute: HospitalIndexRoute,
 }
