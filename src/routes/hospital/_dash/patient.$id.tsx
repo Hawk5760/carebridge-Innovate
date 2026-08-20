@@ -1,7 +1,9 @@
 import { createFileRoute, Link, useParams } from "@tanstack/react-router";
 import { toast } from "sonner";
 import { Bar, GlassCard, Ring, RiskPill, SectionTitle } from "@/components/cb/glass";
+import { AIInsight } from "@/components/cb/ai-panel";
 import { usePatient, useStore } from "@/lib/carebridge/store";
+import { aiInterventionMessage, aiRiskExplanation } from "@/lib/carebridge/ai";
 
 export const Route = createFileRoute("/hospital/_dash/patient/$id")({
   head: () => ({
@@ -115,6 +117,23 @@ function PatientDetail() {
             Trend: {patient.scoreTrend.join(" → ")}
           </p>
         </GlassCard>
+      </div>
+
+      <div className="grid gap-4 lg:grid-cols-2">
+        <AIInsight
+          testid="hospital-ai-risk"
+          title="AI risk explanation"
+          sub="Plain-language summary of why this patient may disengage — decision support only."
+          cta="Explain"
+          run={() => aiRiskExplanation(patient)}
+        />
+        <AIInsight
+          testid="hospital-ai-message"
+          title="Draft outreach message"
+          sub="A warm, personalised WhatsApp message the care team can send."
+          cta="Draft WhatsApp"
+          run={() => aiInterventionMessage(patient, "WhatsApp")}
+        />
       </div>
 
       <div className="grid gap-4 lg:grid-cols-2">

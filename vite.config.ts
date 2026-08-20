@@ -7,9 +7,21 @@
 import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 
 export default defineConfig({
+  // The Emergent preview proxy can't reach the Vite HMR websocket, and the boot
+  // gate blocks hydration until HMR is ready — disable it so the app is interactive.
+  hmrGate: false,
   tanstackStart: {
     // Redirect TanStack Start's bundled server entry to src/server.ts (our SSR error wrapper).
     // nitro/vite builds from this
     server: { entry: "server" },
+  },
+  vite: {
+    server: {
+      host: "0.0.0.0",
+      port: 3000,
+      strictPort: true,
+      allowedHosts: true,
+      hmr: { protocol: "wss", clientPort: 443 },
+    },
   },
 });

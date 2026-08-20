@@ -34,14 +34,14 @@ const NAV = [
 ] as const;
 
 function HospitalShell() {
-  const { hospitalUser, hospitalLogout, patients } = useStore();
+  const { hospitalUser, hospitalLogout, patients, hydrated } = useStore();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!hospitalUser) void navigate({ to: "/hospital/login" });
-  }, [hospitalUser, navigate]);
+    if (hydrated && !hospitalUser) void navigate({ to: "/hospital/login" });
+  }, [hydrated, hospitalUser, navigate]);
 
-  if (!hospitalUser) return null;
+  if (!hydrated || !hospitalUser) return null;
   const allowed = ROLE_ACCESS[hospitalUser.role];
   const critical = patients.filter((p) => p.risk >= 85).length;
 

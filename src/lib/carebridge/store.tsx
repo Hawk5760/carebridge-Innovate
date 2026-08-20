@@ -11,6 +11,7 @@ interface State {
 }
 
 interface Ctx extends State {
+  hydrated: boolean;
   hospitalLogin: (u: HospitalUser) => void;
   hospitalLogout: () => void;
   patientLogin: (id: string) => void;
@@ -25,6 +26,7 @@ const StoreContext = createContext<Ctx | null>(null);
 
 export function CareBridgeProvider({ children }: { children: ReactNode }) {
   const [state, setState] = useState<State>(defaultState);
+  const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
     try {
@@ -33,15 +35,17 @@ export function CareBridgeProvider({ children }: { children: ReactNode }) {
     } catch {
       /* ignore */
     }
+    setHydrated(true);
   }, []);
 
   useEffect(() => {
+    if (!hydrated) return;
     try {
       localStorage.setItem(KEY, JSON.stringify(state));
     } catch {
       /* ignore */
     }
-  }, [state]);
+  }, [state, hydrated]);
 
   const update = useCallback((id: string, fn: (p: Patient) => Patient) => {
     setState((s) => ({ ...s, patients: s.patients.map((p) => (p.id === id ? fn(p) : p)) }));
@@ -50,6 +54,7 @@ export function CareBridgeProvider({ children }: { children: ReactNode }) {
   const value = useMemo<Ctx>(
     () => ({
       ...state,
+      hydrated,
       update,
       hospitalLogin: (u) => setState((s) => ({ ...s, hospitalUser: u })),
       hospitalLogout: () => setState((s) => ({ ...s, hospitalUser: null })),
@@ -57,7 +62,7 @@ export function CareBridgeProvider({ children }: { children: ReactNode }) {
       patientLogout: () => setState((s) => ({ ...s, patientId: null })),
       reset: () => setState(defaultState()),
     }),
-    [state, update],
+    [state, hydrated, update],
   );
 
   return <StoreContext.Provider value={value}>{children}</StoreContext.Provider>;
